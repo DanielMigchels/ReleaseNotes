@@ -1,0 +1,131 @@
+<div class="flex flex-col h-full justify-start items-center w-full">
+  <div class="flex flex-col lg:gap-16 gap-8 lg:grid grid-cols-4 w-full max-w-screen-2xl pb-4">
+    <div class="lg:flex flex-col gap-4 lg:text-end hidden">
+      <div class="text-xl font-semibold flex lg:justify-end items-center gap-2 hover:underline cursor-pointer"
+        (click)="navigateHome()">
+        <ng-icon name="hero-chevron-left"></ng-icon>
+        {{project?.name}}
+      </div>
+      <app-loader *ngIf="!project"></app-loader>
+      <div>
+        @for (release of project?.releases; track release.id) {
+        <div class="flex items-center gap-4 flex-row-reverse">
+          <button class="hover:underline text-end cursor-pointer"
+            (click)="scrollToVersion(release.version)">{{release.version}}</button>
+          <span *ngIf="!release.publishedOn" class="text-sm text-dark-gray">Unpublished</span>
+        </div>
+        }
+      </div>
+    </div>
+    <div class="col-span-2 flex flex-col gap-4">
+      <app-loader *ngIf="!project"></app-loader>
+      <div *ngIf="project?.releases?.length === 0" class="text-darker-gray">
+        There is no release yet.
+      </div>
+      @for (release of project?.releases; track release.id) {
+      <div (drop)="onDrop($event, release)" (dragover)="onDragOver($event)" class="flex flex-col gap-3">
+        <div class="flex justify-between items-center border-b border-b-gray pb-2 gap-2">
+          <div [id]="release.version" class="text-xl flex justify-center items-center gap-4">
+            {{release.version}}
+            <span *ngIf="!release.publishedOn" class="text-sm text-dark-gray">Unpublished</span>
+          </div>
+          <div *ngIf="!release.publishedOn" class="items-center flex gap-1">
+            <button class="bg-primary hover:bg-dark-primary text-white shadow rounded px-1.5 py-1 cursor-pointer"
+              (click)="publish(release.id)">
+              Publish
+            </button>
+            <button (click)="editRelease($event, release)"
+              class="flex justify-center items-center text-darker-gray hover:text-dark-gray cursor-pointer px-0.5">
+              <ng-icon name="hero-pencil"></ng-icon>
+            </button>
+            <button (click)="deleteRelease($event, release)"
+              class="flex justify-center items-center text-error hover:text-dark-error cursor-pointer px-0.5">
+              <ng-icon name="hero-trash"></ng-icon>
+            </button>
+          </div>
+          <div *ngIf="release.publishedOn" class="flex gap-2 justify-center items-center">
+            <button class="text-dark-gray hover:text-darker-gray flex items-center justify-center cursor-pointer"
+              (click)="unpublish(release.id)">
+              <ng-icon name="hero-bars-arrow-down"></ng-icon>
+            </button>
+            <span class="text-dark-gray text-sm">
+              {{release.createdOnUtc | date: 'dd-MM-yyyy'}}
+            </span>
+          </div>
+        </div>
+        <div *ngIf="release?.noteEntries?.length === 0">
+          There are no notes in this release yet.
+        </div>
+        <ul class="list-inside">
+          @for(note of release?.noteEntries; track note.id) {
+          <div class="-mx-2 px-2 flex gap-6"
+            [ngClass]="{'hover:bg-gray rounded cursor-pointer': note.releasePublishedOn === null}" draggable="true"
+            (dragstart)="onDragStart($event, note)">
+            <div class="flex w-2 items-center justify-center">
+              <span>{{note.type | noteEntryType}}</span>
+            </div>
+            <div class="flex gap-1 items-start justify-between w-full">
+              <div>
+                {{note.text}}
+                <a class="px-0.5 text-sm text-primary cursor-pointer" *ngIf="note.url" [href]="note.url"
+                  target="_blank">(link)</a>
+              </div>
+
+              <div class="flex gap-1 justify-center items-center h-full">
+                <button
+                  class="px-0.5 flex justify-center items-center text-darker-gray hover:text-dark-gray cursor-pointer"
+                  *ngIf="!release.publishedOn" (click)="editNote($event, note)">
+                  <ng-icon name="hero-pencil"></ng-icon>
+                </button>
+                <button class="px-0.5 flex justify-center items-center text-error hover:text-dark-error cursor-pointer"
+                  *ngIf="!release.publishedOn" (click)="deleteNote($event, note)">
+                  <ng-icon name="hero-trash"></ng-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+          }
+        </ul>
+        <div class="w-full flex justify-center cursor-pointer">
+          <app-new-note [releaseId]="release.id" *ngIf="release.publishedOn === null"
+            (modalClosed)="getReleaseNotes()"></app-new-note>
+        </div>
+      </div>
+      }
+    </div>
+    <div class="flex flex-col gap-4 pb-4">
+      <span class="text-xl font-semibold hidden lg:block">Project actions</span>
+      <app-loader *ngIf="!project"></app-loader>
+      <div *ngIf="project" class="lg:w-fit flex flex-col gap-2">
+        <div class="xl:w-72">
+
+        </div>
+        <div>
+          <app-new-release [project]="project" (modalClosed)="getReleaseNotes()"></app-new-release>
+        </div>
+        <div class="flex flex-col gap-2 py-2 border-y border-gray">
+          <button class="bg-primary hover:bg-dark-primary text-white px-3 rounded shadow py-2 w-full cursor-pointer"
+            (click)="preview()">
+            Preview PDF
+          </button>
+          <button class="bg-primary hover:bg-dark-primary text-white px-3 rounded shadow py-2 w-full cursor-pointer"
+            (click)="download()">
+            Download PDF
+          </button>
+          <label class="flex gap-1 justify-start items-center">
+            <input type="checkbox" [(ngModel)]="includeUnpublished" class="cursor-pointer">
+            <span class="cursor-pointer">Include unpublished releases</span>
+          </label>
+        </div>
+        <div class="flex flex-col gap-2">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-edit-release #editReleaseModal [release]="selectedRelease" (modalClosed)="getReleaseNotes()"></app-edit-release>
+<app-delete-release #deleteReleaseModal [release]="selectedRelease"
+  (modalClosed)="getReleaseNotes()"></app-delete-release>
+<app-edit-note #editNoteModal [note]="selectedNote" (modalClosed)="getReleaseNotes()"></app-edit-note>
+<app-delete-note #deleteNoteModal [note]="selectedNote" (modalClosed)="getReleaseNotes()"></app-delete-note>

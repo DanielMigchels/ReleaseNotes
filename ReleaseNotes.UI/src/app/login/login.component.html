@@ -1,0 +1,21 @@
+<form [formGroup]="formGroup" class="flex flex-col justify-center items-center gap-2 w-80">
+  <div class="w-full">
+    <input formControlName="email" class="border rounded px-3 py-2 border-gray w-full placeholder:text-dark-gray" type="email"
+      placeholder="Email" />
+    <div *ngIf="formGroup.get('email')?.invalid && formGroup.get('email')?.touched" class="text-dark-error text-sm">
+      <span *ngIf="formGroup.get('email')?.errors?.['required']">Enter an email address.</span>
+      <span *ngIf="formGroup.get('email')?.errors?.['email']">Enter a valid email address.</span>
+    </div>
+  </div>
+  <div class="w-full">
+    <input formControlName="password" class="border rounded px-3 py-2 border-gray w-full placeholder:text-dark-gray" type="password"
+      placeholder="Password" />
+    <div *ngIf="formGroup.get('password')?.invalid && formGroup.get('password')?.touched" class="text-dark-error text-sm">
+      <span *ngIf="formGroup.get('password')?.errors?.['required']">Enter a password.</span>
+    </div>
+  </div>
+
+  <button type="submit" (click)="login()"
+    class="bg-company-primary shadow-sm cursor-pointer hover:bg-company-primary-dark text-white px-3 py-2 w-full rounded">Login</button>
+  <span *ngIf="rejected" class="text-dark-error text-sm">Incorrect email and password combination.</span>
+</form>

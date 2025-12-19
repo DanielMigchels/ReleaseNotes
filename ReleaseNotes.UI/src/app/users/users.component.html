@@ -1,0 +1,45 @@
+<div class="flex justify-center w-full">
+  <div class="flex flex-col-reverse gap-4 lg:gap-16 lg:grid grid-cols-4 w-full max-w-screen-2xl">
+    <div></div>
+    <div class="col-span-2 flex flex-col gap-2">
+      <div class="flex justify-between items-start border-b border-b-gray pb-3">
+        <span class="text-xl font-semibold">Users</span>
+        <div class="flex gap-2">
+          <app-update-password (modalClosed)="getUsers()"></app-update-password>
+          <app-create-user (modalClosed)="getUsers()"></app-create-user>
+        </div>
+      </div>
+      <div class="flex flex-col gap-1.5" *ngIf="users">
+        <div *ngIf="users.length === 0" class="text-dark-gray">
+          It's very empty here...
+        </div>
+        @for (user of users; track user.id) {
+        <div
+          class="bg-true-white border border-gray pl-6 pr-3 py-2 rounded flex justify-between items-center">
+          <div>
+            <div class="flex gap-4 justify-start items-center">
+              <div class="font-semibold">
+                {{user.email}}
+              </div>
+            </div>
+          </div>
+          <div class="items-center flex" *ngIf="!user.isCurrentUser">
+            <button *ngIf="user.activated" (click)="changeActivation($event, user)" class="text-success hover:text-dark-success px-3 flex justify-center items-center cursor-pointer">
+              <ng-icon name="hero-check-circle"></ng-icon>
+            </button>
+            <button *ngIf="!user.activated" (click)="changeActivation($event, user)" class="text-dark-error hover:text-error px-3 flex justify-center items-center cursor-pointer">
+              <ng-icon name="hero-x-circle"></ng-icon>
+            </button>
+          </div>
+          <div *ngIf="user.isCurrentUser" class="text-gray italic text-sm">
+            You cannot deactivate yourself
+          </div>
+        </div>
+        }
+      </div>
+      <app-loader *ngIf="!users"></app-loader>
+    </div>
+  </div>
+</div>
+
+<app-change-activation #changeActivationModal [user]="selectedUser" (modalClosed)="getUsers()"></app-change-activation>

@@ -1,0 +1,26 @@
+<button class="text-dark-gray hover:text-gray flex justify-start items-center gap-1 cursor-pointer" (click)="modal.openModal($event)">
+  <ng-icon name="hero-plus"></ng-icon>
+  <span>Add note</span>
+</button>
+
+<app-generic-modal #modal title="Add note">
+  <form [formGroup]="formGroup" class="flex flex-col gap-2">
+    <div class="flex flex-col gap-1 justify-center">
+      <label *ngFor="let type of noteEntryTypes" class="cursor-pointer">
+        <input type="radio" formControlName="type" [value]="type.value">
+        {{ type.label }}
+      </label>
+    </div>
+    <input formControlName="text" type="text" class="border border-gray w-full px-3 py-2 rounded placeholder:text-dark-gray"
+      placeholder="Note line">
+    <div *ngIf="formGroup.get('text')?.invalid && formGroup.get('text')?.touched" class="text-dark-error text-sm">
+      <span *ngIf="formGroup.get('text')?.errors?.['required']">Enter a note.</span>
+    </div>
+    <input formControlName="url" type="text" class="border border-gray w-full px-3 py-2 rounded placeholder:text-dark-gray"
+      placeholder="Url (Optional)">
+    <div class="flex justify-end items-center">
+      <button type="submit" class="bg-success hover:bg-dark-success text-white px-3 py-2 rounded cursor-pointer"
+        (click)="createNote()">Add</button>
+    </div>
+  </form>
+</app-generic-modal>

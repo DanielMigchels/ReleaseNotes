@@ -1,0 +1,64 @@
+<div class="flex justify-center w-full">
+  <div class="flex flex-col-reverse gap-4 lg:gap-16 lg:grid grid-cols-4 w-full max-w-screen-2xl">
+    <div class="flex flex-col gap-4 lg:text-end">
+
+    </div>
+    <div class="col-span-2 flex flex-col gap-4">
+      <div class="flex justify-between items-start border-b border-b-gray pb-3">
+        <span class="text-xl font-semibold">Release bundles</span>
+      </div>
+      <div class="flex flex-col gap-1.5" *ngIf="bundles">
+        <div *ngIf="bundles.data.length === 0" class="text-dark-gray">
+          It's very empty here...
+        </div>
+        @for (bundle of bundles.data; track bundle.id) {
+        <div (click)="openBundle(bundle.id)"
+          class="bg-true-white border border-gray pl-6 pr-3 py-2 rounded flex justify-between items-center hover:-mx-1 transform duration-100 cursor-pointer">
+          <div>
+            <div class="flex gap-4 justify-start items-center">
+              <div class="font-semibold">
+                {{bundle.name}}
+              </div>
+            </div>
+            <div class="text-sm text-dark-gray">
+              <span class="font-semibold">Created by:</span> {{bundle.createdBy}}
+            </div>
+          </div>
+          <div class="items-center flex">
+            <button (click)="editBundle($event, bundle)"
+              class="text-dark-gray hover:text-gray px-3 flex justify-center items-center border-r border-gray cursor-pointer">
+              <ng-icon name="hero-pencil"></ng-icon>
+            </button>
+            <button (click)="deleteBundle($event, bundle)"
+             class="text-error hover:text-dark-error px-3 flex justify-center items-center cursor-pointer">
+              <ng-icon name="hero-trash"></ng-icon>
+            </button>
+          </div>
+        </div>
+        }
+      </div>
+      <div *ngIf="bundles">
+        <div class="flex justify-end gap-1">
+          <div class="bg-true-white hover:bg-white border border-gray px-3 py-2 rounded cursor-pointer"
+            *ngIf="bundles.hasPrevious" (click)="previousBundle()">
+            Back
+          </div>
+          <div class="bg-true-white hover:bg-white border border-gray px-3 py-2 rounded cursor-pointer"
+            *ngIf="bundles.hasNext" (click)="nextBundle()">
+            Next
+          </div>
+        </div>
+      </div>
+      <app-loader *ngIf="!bundles"></app-loader>
+    </div>
+    <div class="flex flex-col gap-4 pb-4">
+      <span class="text-xl font-semibold hidden lg:block">Release bundle actions</span>
+      <div class="xl:w-72">
+        <app-create-bundle></app-create-bundle>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-edit-bundle #editBundleModal [bundle]="selectedBundle" (modalClosed)="fetchData()"></app-edit-bundle>
+<app-delete-bundle #deleteBundleModal [bundle]="selectedBundle" (modalClosed)="fetchData()"></app-delete-bundle>

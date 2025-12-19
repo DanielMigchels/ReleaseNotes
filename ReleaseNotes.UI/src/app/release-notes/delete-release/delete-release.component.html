@@ -1,0 +1,17 @@
+<app-generic-modal #modal title="Delete release">
+  <div>
+    Are you sure you want to delete release <span class="font-bold">{{release?.version}}</span>?
+  </div>
+  <div class="font-bold">
+    This cannot be undone.
+  </div>
+  <div class="flex justify-between items-center">
+    <label class="py-2 cursor-pointer">
+      <input type="checkbox" [(ngModel)]="isChecked">
+      I am sure
+    </label>
+    <div class="flex justify-end" *ngIf="isChecked">
+      <button (click)="deleteRelease()" class="bg-error hover:bg-dark-error text-white px-3 py-2 rounded cursor-pointer">Delete</button>  
+    </div>
+  </div>
+</app-generic-modal>

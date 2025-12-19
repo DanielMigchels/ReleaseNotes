@@ -1,0 +1,15 @@
+<app-generic-modal #modal title="Edit release">
+  <form [formGroup]="formGroup" class="flex flex-col gap-3">
+    <input formControlName="version" type="text" class="border border-gray w-full px-3 py-2 rounded mt-2 placeholder:text-dark-gray"
+      placeholder="Version number">
+    <input formControlName="createdOnUtc" type="datetime-local" class="border border-gray w-full px-3 py-2 rounded mt-2 placeholder:text-dark-gray"
+      placeholder="Date">
+    <div *ngIf="formGroup.get('version')?.invalid && formGroup.get('version')?.touched" class="text-dark-error text-sm">
+      <span *ngIf="formGroup.get('version')?.errors?.['required']">Enter a version number.</span>
+    </div>
+    <div class="flex justify-end items-center">
+      <button type="submit" class="bg-primary hover:bg-dark-primary text-white px-3 py-2 rounded cursor-pointer"
+        (click)="createRelease()">Update</button>
+    </div>
+  </form>
+</app-generic-modal>

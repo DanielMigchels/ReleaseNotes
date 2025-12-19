@@ -1,0 +1,16 @@
+<button class="bg-success hover:bg-dark-success text-white px-3 py-2 rounded cursor-pointer w-full" (click)="modal.openModal($event)">
+  Add release bundle
+</button>
+
+<app-generic-modal #modal title="Add release bundle">
+  <form [formGroup]="formGroup" class="flex flex-col gap-3">
+    <input formControlName="name" type="text" class="border border-gray w-full px-3 py-2 rounded mt-2 placeholder:text-dark-gray" placeholder="Project name">
+    <div class="flex justify-end items-center">
+      <button *ngIf="!isSubmitting" type="submit" class="bg-success hover:bg-dark-success text-white px-3 py-2 rounded cursor-pointer"
+        (click)="createBundle()" [disabled]="isSubmitting">
+        Add
+      </button>
+      <app-loader *ngIf="isSubmitting"></app-loader>
+    </div>
+  </form>
+</app-generic-modal>

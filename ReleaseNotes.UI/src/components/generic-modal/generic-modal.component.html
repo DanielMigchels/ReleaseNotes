@@ -1,0 +1,20 @@
+<div *ngIf="showModal"
+  class="fixed inset-0 z-50 outline-none focus:outline-none justify-center items-center flex"
+  (click)="closeModal()">
+  <div class="relative w-auto my-6 mx-auto max-w-6xl" (click)="$event.stopPropagation()">
+    <div class="rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none px-4 py-3">
+      <div class="flex flex-col gap-2 p-2 lg:w-96">
+        <div class="flex justify-between items-center">
+          <div class="text-xl font-semibold">
+            {{title}}
+          </div>
+          <button (click)="closeModal()" class="text-gray hover:text-dark-gray -m-3 p-3 cursor-pointer">
+            <ng-icon name="hero-x-mark"></ng-icon>
+          </button>
+        </div>
+        <ng-content></ng-content>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="showModal" class="opacity-50 fixed inset-0 z-40 bg-black"></div>

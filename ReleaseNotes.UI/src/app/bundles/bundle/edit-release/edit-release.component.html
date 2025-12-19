@@ -1,0 +1,28 @@
+<button (click)="modal.openModal($event)" class="text-dark-gray hover:text-gray px-3 flex justify-center items-center border-x border-gray cursor-pointer">
+  <ng-icon name="hero-pencil"></ng-icon>
+</button>
+
+<app-generic-modal #modal title="Edit release bundle">
+  <form [formGroup]="formGroup" class="flex flex-col gap-3">
+    <input formControlName="version" type="text"
+      class="border border-gray w-full px-3 py-2 rounded mt-2 placeholder:text-dark-gray" placeholder="Version number">
+    <div>
+      <span class="font-semibold">Select your start time</span>
+      <input formControlName="startTimeUtc" type="date"
+        class="border border-gray w-full px-3 py-2 rounded placeholder:text-dark-gray" placeholder="Start time">
+    </div>
+    <div class="flex flex-col">
+      <span class="font-semibold">Select your end time</span>
+      <input formControlName="endTimeUtc" type="date"
+        class="border border-gray w-full px-3 py-2 rounded placeholder:text-dark-gray" placeholder="End time">
+    </div>
+    <div class="flex justify-end items-center">
+      <button *ngIf="!isSubmitting" type="submit"
+        class="bg-primary hover:bg-dark-primary text-white px-3 py-2 rounded cursor-pointer"
+        (click)="updateReleaseBundle()" [disabled]="isSubmitting">
+        Update
+      </button>
+      <app-loader *ngIf="isSubmitting"></app-loader>
+    </div>
+  </form>
+</app-generic-modal>

@@ -1,0 +1,17 @@
+<button class="bg-success hover:bg-dark-success text-white px-3 py-2 rounded cursor-pointer" (click)="modal.openModal($event)">
+  Add user
+</button>
+
+<app-generic-modal #modal title="Add user">
+  <form class="flex flex-col gap-2" [formGroup]="formGroup">
+    <input formControlName="email" type="email" class="border border-gray w-full px-3 py-2 rounded placeholder:text-dark-gray" placeholder="Email address">
+    <input formControlName="password" type="password" class="border border-gray w-full px-3 py-2 rounded placeholder:text-dark-gray" placeholder="Password">
+    <input formControlName="confirmPassword" type="password" class="border border-gray w-full px-3 py-2 rounded placeholder:text-dark-gray" placeholder="Repeat password">
+    <p *ngIf="passwordsDontMatch" class="text-dark-error">Passwords do not match.</p>
+    <div class="flex justify-end gap-2">
+      <button type="submit" class="bg-success hover:bg-dark-success text-white px-3 py-2 rounded cursor-pointer" (click)="createUser()">
+        Save
+      </button>
+    </div>
+  </form>
+</app-generic-modal>

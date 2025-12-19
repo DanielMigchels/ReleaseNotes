@@ -1,0 +1,118 @@
+<div class="flex flex-col h-full justify-start items-center w-full">
+  <div class="flex flex-col lg:gap-16 gap-8 lg:grid grid-cols-4 w-full max-w-screen-2xl pb-4">
+    <div class="flex flex-col gap-4 lg:text-end">
+      <div class="text-xl font-semibold flex lg:justify-end items-center gap-2 hover:underline cursor-pointer"
+        (click)="navigateHome()">
+        <ng-icon name="hero-chevron-left"></ng-icon>
+        {{bundle?.name}}
+      </div>
+      <app-loader *ngIf="!bundle"></app-loader>
+      <div>
+        @for (release of bundle?.releases; track release.id) {
+        <div class="flex items-center gap-4 lg:flex-row-reverse hover:underline cursor-pointer"
+          (click)="selectRelease(release)">
+          <button class="text-end"
+            [ngClass]="{'font-bold': release.version === selectedRelease?.version}">{{release.version}}</button>
+          <span class="text-sm text-dark-gray lg:hidden 2xl:block">
+            <div class="flex justify-center items-center gap-2">
+              {{release.startTimeUtc | brasserTime}}
+              <ng-icon name="heroArrowsRightLeft" class=""></ng-icon>
+              <span>
+                {{release.endTimeUtc | brasserTime}}
+              </span>
+            </div>
+          </span>
+        </div>
+        }
+      </div>
+    </div>
+    <div class="col-span-2 flex flex-col gap-4">
+      <div *ngIf="selectedRelease === undefined">You have not selected a release.</div>
+      <div class="flex justify-between items-center pb-2" *ngIf="selectedRelease !== undefined">
+        <h1 class="text-2xl font-semibold">{{selectedRelease.version}}</h1>
+        <div class="text-sm flex justify-center 2xl:flex gap-2 items-center">
+          <div class="flex justify-center items-center gap-2 text-dark-gray">
+            <span>{{selectedRelease.startTimeUtc | brasserTime}}</span>
+            <ng-icon name="heroArrowsRightLeft" class=""></ng-icon>
+            <span>{{selectedRelease.endTimeUtc | brasserTime}}</span>
+          </div>
+          <div class="flex justify-center gap-1">
+            <app-edit-release [release]="selectedRelease" (modalClosed)="fetchData()"></app-edit-release>
+            <app-delete-release [release]="selectedRelease" (modalClosed)="fetchData()"></app-delete-release>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="selectedRelease?.releaseNote!.length === 0">
+        You have not selected any projects for this release bundle yet.
+      </div>
+      @for (releaseNote of selectedRelease?.releaseNote; track releaseNote.id) {
+      <div>
+        <h1 class="text-xl font-semibold pb-2 mb-3 border-b border-b-gray">{{releaseNote.name}}</h1>
+        <div *ngIf="releaseNote?.releases!.length === 0">
+          This project contains no releases.
+        </div>
+        @for (release of releaseNote?.releases; track release.id) {
+        <div class="flex flex-col gap-3">
+          <div class="flex justify-between items-center pb-2 gap-2">
+            <div [id]="release.version" class="text-xl flex justify-center items-center gap-4">
+              {{release.version}}
+            </div>
+            <div *ngIf="release.publishedOn" class="flex gap-2 justify-center items-center">
+              <span class="text-dark-gray text-sm">
+                {{release.createdOnUtc | date: 'dd-MM-yyyy'}}
+              </span>
+            </div>
+          </div>
+          <div *ngIf="release?.noteEntries?.length === 0">
+            There are no notes in this release yet.
+          </div>
+          <ul class="list-inside">
+            @for(note of release?.noteEntries; track note.id) {
+            <div class="-mx-2 px-2 flex gap-6">
+              <div class="flex w-2 items-center justify-center">
+                <span>{{note.type | noteEntryType}}</span>
+              </div>
+              <div class="flex gap-1 items-start justify-between w-full">
+                <div>
+                  {{note.text}}
+                  <a class="px-0.5 text-sm text-primary cursor-pointer" *ngIf="note.url" [href]="note.url"
+                    target="_blank">(link)</a>
+                </div>
+              </div>
+            </div>
+            }
+          </ul>
+          <div class="w-full flex justify-center cursor-pointer">
+          </div>
+        </div>
+        }
+      </div>
+      }
+    </div>
+    <div class="flex flex-col gap-4 pb-4">
+      <span class="text-xl font-semibold hidden lg:block">Release bundle actions</span>
+      <app-loader *ngIf="!bundle"></app-loader>
+      <div *ngIf="bundle" class="lg:w-fit flex flex-col gap-2">
+        <div class="xl:w-72">
+
+        </div>
+        <div class="">
+          <app-create-release [bundle]="bundle" (modalClosed)="fetchData()"></app-create-release>
+        </div>
+        <div class="flex flex-col gap-2 py-2 border-y border-gray">
+          <button class="bg-primary hover:bg-dark-primary text-white px-3 rounded shadow py-2 w-full cursor-pointer"
+            (click)="preview()">
+            Preview PDF
+          </button>
+          <button class="bg-primary hover:bg-dark-primary text-white px-3 rounded shadow py-2 w-full cursor-pointer"
+            (click)="download()">
+            Download PDF
+          </button>
+        </div>
+        <div class="flex flex-col gap-2">
+          <app-select-projects [bundle]="bundle" (modalClosed)="fetchData()"></app-select-projects>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

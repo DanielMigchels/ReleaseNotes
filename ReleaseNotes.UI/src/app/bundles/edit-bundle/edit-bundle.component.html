@@ -1,0 +1,16 @@
+<app-generic-modal #modal title="Edit release bundle">
+  <form [formGroup]="formGroup" class="flex flex-col gap-3">
+    <input formControlName="name" type="text" class="border border-gray w-full px-3 py-2 rounded mt-2 placeholder:text-dark-gray"
+      placeholder="Bundle name">
+      <div *ngIf="formGroup.get('name')?.invalid && formGroup.get('name')?.touched" class="text-dark-error text-sm">
+        <span *ngIf="formGroup.get('name')?.errors?.['required']">Enter a bundle name.</span>
+      </div>
+    <div class="flex justify-end items-center">
+      <button *ngIf="!isSubmitting" type="submit" class="bg-primary hover:bg-dark-primary text-white px-3 py-2 rounded cursor-pointer"
+        (click)="editBundle()" [disabled]="isSubmitting">
+        Update
+      </button>
+      <app-loader *ngIf="isSubmitting"></app-loader>
+    </div>
+  </form>
+</app-generic-modal>

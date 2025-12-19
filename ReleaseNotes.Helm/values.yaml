@@ -1,0 +1,12 @@
+namespace: releasenotes
+
+postgres:
+  user: postgres
+  password: postgres
+  db: postgres
+
+connectionstrings:
+  postgres: placeholder
+
+jwtoptions:
+  secret: placeholder

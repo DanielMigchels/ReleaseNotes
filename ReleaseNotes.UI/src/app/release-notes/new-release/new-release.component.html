@@ -1,0 +1,17 @@
+<button class="bg-success hover:bg-dark-success text-white px-3 rounded shadow py-2 w-full cursor-pointer" (click)="modal.openModal($event)">
+  New release
+</button>
+
+<app-generic-modal #modal title="New release">
+  <form [formGroup]="formGroup" class="flex flex-col gap-3">
+    <input formControlName="version" type="text" class="border border-gray w-full px-3 py-2 rounded mt-2 placeholder:text-dark-gray"
+      placeholder="Version number">
+    <div *ngIf="formGroup.get('version')?.invalid && formGroup.get('version')?.touched" class="text-dark-error text-sm">
+      <span *ngIf="formGroup.get('version')?.errors?.['required']">Enter a version number.</span>
+    </div>
+    <div class="flex justify-end items-center">
+      <button type="submit" class="bg-success hover:bg-dark-success text-white px-3 py-2 rounded cursor-pointer"
+        (click)="createRelease()">Add</button>
+    </div>
+  </form>
+</app-generic-modal>

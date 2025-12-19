@@ -1,0 +1,27 @@
+<button class="bg-dark-gray hover:bg-darker-gray text-white px-3 rounded shadow py-2 w-full cursor-pointer"
+  (click)="modal.openModal($event)">
+  Select projects
+</button>
+
+<app-generic-modal #modal title="Select projects">
+  <form [formGroup]="formGroup" class="flex flex-col gap-3">
+    <div class="h-72 overflow-auto border-gray border pl-1 bg-true-white rounded">
+      @for (project of projects; track project.id) {
+      <div>
+        <label class="w-full">
+          <input type="checkbox" [value]="project.id" [checked]="isProjectSelected(project.id)" (change)="onProjectSelection($event)"/>
+          {{project.name}}
+        </label>
+      </div>
+      }
+    </div>
+    <div class="flex justify-end items-center">
+      <button *ngIf="!isSubmitting" type="submit"
+        class="bg-success hover:bg-dark-success text-white px-3 py-2 rounded cursor-pointer" (click)="addProjectsToBundle()"
+        [disabled]="isSubmitting">
+        Add
+      </button>
+      <app-loader *ngIf="isSubmitting"></app-loader>
+    </div>
+  </form>
+</app-generic-modal>

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: releasenotes-service
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: releasenotes-service
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+      targetPort: 5000
+      nodePort: 32524
+  selector:
+    app: releasenotes-deployment

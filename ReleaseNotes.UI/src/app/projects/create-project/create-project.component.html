@@ -1,0 +1,20 @@
+<button class="bg-success hover:bg-dark-success text-white px-3 py-2 rounded cursor-pointer w-full" (click)="modal.openModal($event)">
+  Add project
+</button>
+
+<app-generic-modal #modal title="Add project">
+  <form [formGroup]="formGroup" class="flex flex-col gap-3">
+    <input formControlName="name" type="text" class="border border-gray w-full px-3 py-2 rounded mt-2 placeholder:text-dark-gray"
+      placeholder="Project name">
+    <div *ngIf="formGroup.get('name')?.invalid && formGroup.get('name')?.touched" class="text-dark-error text-sm">
+      <span *ngIf="formGroup.get('name')?.errors?.['required']">Enter a project name.</span>
+    </div>
+    <div class="flex justify-end items-center">
+      <button *ngIf="!isSubmitting" type="submit" class="bg-success hover:bg-dark-success text-white px-3 py-2 rounded cursor-pointer"
+        (click)="createProject()" [disabled]="isSubmitting">
+        Add
+      </button>
+      <app-loader *ngIf="isSubmitting"></app-loader>
+    </div>
+  </form>
+</app-generic-modal>
