@@ -1,12 +1,13 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: postgres-volume-claim
-  namespace: {{ .Values.namespace }}
+  name: {{ .Release.Name }}-postgres-volume-claim
+  namespace: {{ .Release.Namespace }}
   labels:
     app: postgres
 spec:
   storageClassName: manual
+  volumeName: {{ .Release.Name }}-postgres-volume
   accessModes:
     - ReadWriteMany # Todo check this out
   resources:

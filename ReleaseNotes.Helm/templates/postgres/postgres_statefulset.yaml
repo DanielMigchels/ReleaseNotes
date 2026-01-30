@@ -1,9 +1,10 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: postgres
-  namespace: {{ .Values.namespace }}
+  namespace: {{ .Release.Namespace }}
 spec:
+  serviceName: postgres
   replicas: 1
   selector:
     matchLabels:
@@ -19,13 +20,14 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5432
+              name: postgres
           envFrom:
             - configMapRef:
                 name: postgres-configmap
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
-              name: postgresdata
+              name: postgres-storage
       volumes:
-        - name: postgresdata
+        - name: postgres-storage
           persistentVolumeClaim:
-            claimName: postgres-volume-claim
+            claimName: {{ .Release.Name }}-postgres-volume-claim

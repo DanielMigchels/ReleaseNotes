@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: releasenotes-deployment
-          image: 'localhost:32000/release-notes:latest'
+          image: 'danielmigchels/releasenotes:latest'
           imagePullPolicy: Always
           ports:
             - containerPort: 8080

@@ -1,16 +1,14 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: postgres-volume
-  namespace: {{ .Values.namespace }}
+  name: {{ .Release.Name }}-postgres-volume
   labels:
-    type: local
     app: postgres
 spec:
   storageClassName: manual
   capacity:
     storage: 2Gi
   accessModes:
-    - ReadWriteMany # Todo check this out
+    - ReadWriteMany 
   hostPath:
-    path: /data/postgresql
+    path: /data/{{ .Release.Name }}/postgresql/
